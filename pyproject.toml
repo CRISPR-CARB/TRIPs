@@ -1,0 +1,21 @@
+[project]
+name = "TRIPs"
+version = "0.1.0"
+description = "Transcription-Replication"
+authors = ["Jeremy Zucker <Jeremy.Zucker@pnnl.gov>"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.envs.default]
+python = "3.10"
+dependencies = [
+    "pandas==1.3.5",
+    "numpy",
+    "scanpy==1.7.1",
+    "matplotlib==3.5.1",
+    "seaborn",
+    "scvi-tools==0.14.5",
+    "pytorch_lightning==1.6.0"
+]
