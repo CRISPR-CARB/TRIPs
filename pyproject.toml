@@ -2,7 +2,7 @@
 name = "TRIPs"
 version = "0.1.0"
 description = "Transcription-Replication"
-authors = ["Jeremy Zucker <Jeremy.Zucker@pnnl.gov>"]
+authors = [{name = "Jeremy Zucker", email = "<Jeremy.Zucker@pnnl.gov>"}]
 
 [build-system]
 requires = ["hatchling"]
