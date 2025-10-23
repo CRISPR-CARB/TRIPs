@@ -1,4 +1,5 @@
 # TRIPs
+Version: 0.1.0
 
 ### Dependencies
 Analysis was done with Python v3.8.6 with the following libraries:
