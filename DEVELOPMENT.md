@@ -14,8 +14,8 @@ Currently, TRIPs consists of Jupyter notebooks that must be run sequentially wit
 ## Proposed Changes
 
 ### 1. Package Structure
-- [ ] Create proper Python package structure with `src/trips/` layout
-- [ ] Set up `pyproject.toml` with dependencies and package metadata
+- [x] Create proper Python package structure with `src/trips/` layout
+- [x] Set up `pyproject.toml` with dependencies and package metadata
 - [ ] Organize code into logical modules:
   - `preprocessing.py` - Data import, filtering, scVI denoising
   - `cycle_analysis.py` - Cell cycle analysis, angle assignment
@@ -25,7 +25,7 @@ Currently, TRIPs consists of Jupyter notebooks that must be run sequentially wit
   - `io.py` - File I/O operations
   - `visualization.py` - Plotting functions
 - [ ] Extract notebook code into functions with clear inputs/outputs
-- [ ] Add `__init__.py` files with public API exports
+- [x] Add `__init__.py` files with public API exports
 
 ### 2. Command-Line Interface (CLI)
 - [ ] Implement Click-based CLI with subcommands:
