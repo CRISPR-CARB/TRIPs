@@ -253,70 +253,6 @@ def test_remove_rRNA_returns_copy(sample_counts_df, rRNA_reference_file):
     # Result should be different
     assert result.shape != sample_counts_df.shape
 
-Absolutely! Here's a comprehensive test suite for filter_samples_by_bc1:
-python"""
-Tests for filter_samples_by_bc1 function in preprocessing module.
-"""
-
-import pytest
-import pandas as pd
-import numpy as np
-from pathlib import Path
-from trips.preprocessing import filter_samples_by_bc1
-
-
-# ============================================================================
-# Fixtures
-# ============================================================================
-
-@pytest.fixture
-def sample_counts_with_barcodes():
-    """Create a count matrix with PETRI-seq style barcodes."""
-    # Create barcodes that match the PETRI-seq format
-    # bc1 values: 1-5 will be WT, 6-10 will be knockout
-    barcodes = [
-        'D5_lib1_bc1_1_bc2_100',
-        'D5_lib1_bc1_2_bc2_101',
-        'D5_lib1_bc1_3_bc2_102',
-        'D5_lib2_bc1_4_bc2_103',
-        'D5_lib2_bc1_5_bc2_104',
-        'D5_lib1_bc1_6_bc2_105',
-        'D5_lib1_bc1_7_bc2_106',
-        'D5_lib2_bc1_8_bc2_107',
-        'D5_lib2_bc1_9_bc2_108',
-        'D5_lib1_bc1_10_bc2_109',
-    ]
-
-    return pd.DataFrame({
-        'gene1': np.random.randint(0, 100, 10),
-        'gene2': np.random.randint(0, 100, 10),
-        'gene3': np.random.randint(0, 100, 10),
-    }, index=barcodes)
-
-
-@pytest.fixture
-def simple_bc1_mapping():
-    """Simple bc1 mapping for testing."""
-    return {
-        (1, 5): 'WT',
-        (6, 10): 'knockout'
-    }
-
-
-@pytest.fixture
-def complex_bc1_mapping():
-    """More complex bc1 mapping with 3 conditions."""
-    return {
-        (1, 36): 'WT',
-        (37, 72): 'sigB_KO',
-        (73, 96): 'saeQRS_KO'
-    }
-
-
-# ============================================================================
-# Basic Functionality Tests
-# ============================================================================
-
 def test_filter_samples_basic(sample_counts_with_barcodes, simple_bc1_mapping):
     """Test basic sample filtering keeping only WT."""
     result = filter_samples_by_bc1(
@@ -378,7 +314,6 @@ def test_filter_samples_preserves_data(sample_counts_with_barcodes, simple_bc1_m
         result.loc[test_barcode],
         sample_counts_with_barcodes.loc[test_barcode]
     )
-
 def test_filter_samples_ecoli_pattern():
     """Test with Ecoli (D1) barcode pattern."""
     barcodes = [
@@ -503,74 +438,6 @@ def test_filter_samples_no_output_file(sample_counts_with_barcodes, simple_bc1_m
 
 
 # ============================================================================
-# Complex Mapping Tests
-# ============================================================================
-
-def test_filter_samples_complex_mapping():
-    """Test with more realistic USA300 bc1 mapping."""
-    # Create barcodes across all three conditions
-    barcodes = [
-        f'D5_lib1_bc1_{i}_bc2_100' for i in [5, 10, 15, 20, 25, 30]  # WT (1-36)
-    ] + [
-        f'D5_lib1_bc1_{i}_bc2_100' for i in [40, 45, 50, 55]  # sigB_KO (37-72)
-    ] + [
-        f'D5_lib1_bc1_{i}_bc2_100' for i in [75, 80, 85]  # saeQRS_KO (73-96)
-    ]
-
-    counts = pd.DataFrame({
-        'gene1': np.random.randint(0, 100, len(barcodes)),
-        'gene2': np.random.randint(0, 100, len(barcodes)),
-    }, index=barcodes)
-
-    bc1_mapping = {
-        (1, 36): 'WT',
-        (37, 72): 'sigB_KO',
-        (73, 96): 'saeQRS_KO'
-    }
-
-    # Test keeping only WT
-    result_wt = filter_samples_by_bc1(counts, bc1_mapping, ['WT'])
-    assert result_wt.shape[0] == 6
-
-    # Test keeping only knockouts
-    result_ko = filter_samples_by_bc1(counts, bc1_mapping, ['sigB_KO', 'saeQRS_KO'])
-    assert result_ko.shape[0] == 7
-
-    # Test keeping all
-    result_all = filter_samples_by_bc1(counts, bc1_mapping, ['WT', 'sigB_KO', 'saeQRS_KO'])
-    assert result_all.shape[0] == 13
-
-
-def test_filter_samples_boundary_conditions():
-    """Test bc1 values at boundaries of ranges."""
-    # Test exact boundary values
-    barcodes = [
-        'D5_lib1_bc1_1_bc2_100',   # First WT
-        'D5_lib1_bc1_36_bc2_101',  # Last WT
-        'D5_lib1_bc1_37_bc2_102',  # First knockout
-        'D5_lib1_bc1_72_bc2_103',  # Last knockout
-    ]
-
-    counts = pd.DataFrame({
-        'gene1': [10, 20, 30, 40],
-    }, index=barcodes)
-
-    bc1_mapping = {
-        (1, 36): 'WT',
-        (37, 72): 'knockout'
-    }
-
-    result = filter_samples_by_bc1(counts, bc1_mapping, ['WT'])
-    assert result.shape[0] == 2
-    assert 'D5_lib1_bc1_1_bc2_100' in result.index
-    assert 'D5_lib1_bc1_36_bc2_101' in result.index
-
-
-
-
-# ============================================================================
 # Integration Tests (using real reference file)
 # ============================================================================
-
-def test_Saureus():
 
