@@ -143,6 +143,9 @@ def filter_samples_by_bc1(
 
     counts_filtered = counts_df.loc[mask]
 
+    # Set index name for consistency with saved files
+    counts_filtered.index.name = 'CellBarcode'  # ← Add this line
+
     n_kept = mask.sum()
     n_total = len(counts_df)
     logger.info(f"Kept {n_kept}/{n_total} cells from samples: {samples_to_keep}")
