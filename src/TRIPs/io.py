@@ -98,7 +98,7 @@ def load_count_matrix(counts_dir: str) -> pd.DataFrame:
     return counts_df
 
 
-def load_gene_annotations(...):
+def load_gene_annotations():
     ...
 
 
@@ -106,5 +106,5 @@ def load_gene_annotations(...):
 # Output functions
 # ============================================================================
 
-def save_anndata(...):
+def save_anndata():
     ...
