@@ -14,23 +14,14 @@ or generate synthetic test data where appropriate.
 import pytest
 import pandas as pd
 import numpy as np
+import TRIPs
 from pathlib import Path
-from trips.preprocessing import (
+from TRIPs.preprocessing import (
     remove_rRNA,
     filter_samples_by_bc1
     # ... other functions you're testing
 )
 
-"""
-Tests for remove_rRNA function in preprocessing module.
-"""
-
-import pytest
-import pandas as pd
-import numpy as np
-from pathlib import Path
-import tempfile
-from trips.preprocessing import remove_rRNA
 
 # ============================================================================
 # Fixtures
@@ -333,7 +324,7 @@ def test_filter_samples_ecoli_pattern():
         counts,
         bc1_mapping,
         samples_to_keep=['WT'],
-        barcode_pattern='D1_lib\d_bc1_'  # Ecoli pattern
+        barcode_pattern="D1_lib\d_bc1_"  # Ecoli pattern
     )
 
     assert result.shape[0] == 2  # First two barcodes
@@ -351,7 +342,7 @@ def test_filter_samples_wrong_pattern_raises_error():
             counts,
             bc1_mapping,
             samples_to_keep=['WT'],
-            barcode_pattern='D5_lib\d_bc1_'  # Wrong pattern!
+            barcode_pattern="D5_lib\d_bc1_"  # Wrong pattern!
         )
 def test_filter_samples_no_matching_samples(sample_counts_with_barcodes, simple_bc1_mapping):
     """Test error when no samples match the filter."""
