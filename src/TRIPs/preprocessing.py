@@ -76,22 +76,22 @@ def remove_rRNA(counts_df: pd.DataFrame, ref_rna: str) -> pd.DataFrame:
     return counts_filtered
 
 
-def filter_samples_by_bc1(
+def filter_samples_by_barcode(
     counts_df: pd.DataFrame,
-    bc1_mapping: dict,
+    barcode_mapping: dict,
     samples_to_keep: list[str],
     barcode_pattern: str = 'D5_lib\d_bc1_',
     output_path: str = None
 ) -> pd.DataFrame:
     """
-    Filter count matrix to keep only specified sample types based on bc1 indices.
+    Filter count matrix to keep only specified sample types based on barcode indices.
 
     Parameters
     ----------
     counts_df : pd.DataFrame
         Count matrix with cell barcodes as index.
-    bc1_mapping : dict
-        Mapping of bc1 ranges to sample names, e.g.,
+    barcode_mapping : dict
+        Mapping of barcode ranges to sample names, e.g.,
         {(1, 36): 'WT', (37, 72): 'sigB_KO', (73, 96): 'saeQRS_KO'}
     samples_to_keep : list[str]
         Sample names to keep, e.g., ['WT']
@@ -113,22 +113,22 @@ def filter_samples_by_bc1(
     ValueError
         If no samples match the samples_to_keep list.
     """
-    # Create bc1 lookup array from the mapping
-    max_bc1 = max(end for start, end in bc1_mapping.keys())
-    bc1_lookup = [''] * max_bc1
+    # Create barcode lookup array from the mapping
+    max_barcode = max(end for start, end in barcode_mapping.keys())
+    barcode_lookup = [''] * max_barcode
 
-    for (start, end), sample_name in bc1_mapping.items():
+    for (start, end), sample_name in barcode_mapping.items():
         for i in range(start - 1, end):  # -1 for 0-indexing
-            bc1_lookup[i] = sample_name
+            barcode_lookup[i] = sample_name
 
-    bc1_lookup = np.array(bc1_lookup)
+    barcode_lookup = np.array(barcode_lookup)
 
-    # Extract bc1 indices from cell barcodes
-    bc1 = counts_df.index.str.replace(barcode_pattern, '', regex=True).\
+    # Extract barcode indices from cell barcodes
+    barcode = counts_df.index.str.replace(barcode_pattern, '', regex=True).\
         str.replace('_bc2_.*', '', regex=True).astype(int)
 
-    # Map bc1 to sample labels
-    sample_label = pd.Series(bc1_lookup[bc1.to_numpy() - 1], index=counts_df.index)
+    # Map barcode to sample labels
+    sample_label = pd.Series(barcode_lookup[barcode.to_numpy() - 1], index=counts_df.index)
 
     logger.info(f"Sample distribution:\n{sample_label.value_counts()}")
 

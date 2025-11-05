@@ -1,0 +1,19 @@
+# Changes here will be overwritten by Copier; NEVER EDIT MANUALLY
+_commit: '9030931'
+_src_path: git@tanuki-data.pnnl.gov:ciemss/ceda-project-copier.git
+author: Jeremy Zucker
+copyright_date: '2025'
+copyright_holder: Jeremy Zucker
+coverage: true
+deptry: true
+email: Jeremy.Zucker@pnnl.gov
+include_gitlab_ci: true
+mkdocs: true
+namespace: jeremy.zucker
+open_source_license: MIT License
+package_manager: uv
+project_description: This repo contains code for pre-processing, cycle analysis, promoter
+    distance analysis, and trip analysis for bacterium.
+project_name: TRIPs
+project_slug: TRIPs
+type_checker: mypy

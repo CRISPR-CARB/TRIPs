@@ -1,0 +1,14 @@
+# See https://github.com/gitleaks/gitleaks?tab=readme-ov-file#configuration
+
+[extend]
+useDefault = true
+
+[[rules]]
+id = "SLURM account"
+description = "SLURM account"
+regex = '''#SBATCH --account=(\w+)'''
+
+[[rules]]
+id = "SLURM email"
+description = "SLURM email"
+regex = '''#SBATCH --mail-user=(\w+)'''

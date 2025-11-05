@@ -1,0 +1,62 @@
+version: "3"
+
+tasks:
+  install:
+    desc: Sync the virtual environment and install the pre-commit hooks
+    cmds:
+      
+      - uv sync
+      - uv run pre-commit install
+      
+
+  check:
+    desc: Run code quality tools
+    cmds:
+      
+      - uv lock --check
+      - uv run pre-commit run -a --show-diff-on-failure
+      
+      - uv run deptry src
+      
+      
+
+
+  mypy:
+    desc: Run static type checking with mypy
+    cmds:
+      
+      - uv run mypy
+      
+
+
+
+
+  test:
+    desc: Test the code with pytest
+    cmds:
+      
+      
+      - uv run python -m pytest --cov --cov-config=pyproject.toml --cov-report term --cov-report xml:coverage.xml
+      
+      
+
+
+  docs:
+    desc: Build the documentation
+    cmds:
+      
+      - uv run mkdocs build -d public --strict --verbose
+      
+
+  docs-serve:
+    desc: Build and serve the documentation
+    cmds:
+      
+      - uv run mkdocs serve
+      
+
+
+  default:
+    desc: Display help information
+    cmds:
+      - task --list

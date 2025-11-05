@@ -1,0 +1,93 @@
+site_name: TRIPs
+repo_url: https://gitlab.com/jeremy.zucker/TRIPs
+site_url: https://jeremy.zucker.gitlab.io/TRIPs
+site_description: This repo contains code for pre-processing, cycle analysis, promoter distance analysis, and trip analysis for bacterium.
+site_author: Jeremy Zucker
+edit_uri: edit/main/docs/
+repo_name: jeremy.zucker/TRIPs
+copyright: Maintained by <a href="https://www.gitlab.com/jeremy.zucker">jeremy.zucker</a>
+
+nav:
+  - Home: index.md
+  - Contributing: CONTRIBUTING.md
+  - License: LICENSE.md
+
+plugins:
+  - search
+  - api-autonav:
+      modules: ["src/TRIPs"]
+      exclude: []
+      nav_section_title: API Reference
+      api_root_uri: api_reference
+      exclude_private: true
+      on_implicit_namespace_package: warn
+  - mkdocstrings:
+      enable_inventory: true
+      handlers:
+        python:
+          paths: ["src/TRIPs"]
+          inventories: [] # Links to objects.inv of external packages' documentation
+          options:
+            docstring_style: numpy
+            docstring_section_style: list
+            heading_level: 1
+            merge_init_into_class: true
+            show_docstring_attributes: true
+            show_root_heading: true
+            show_signature_annotations: true
+            show_symbol_type_heading: true
+            show_symbol_type_toc: true
+            separate_signature: true
+            filters:
+              - "!^_"  # Exclude private objects (e.g., _private_function)
+
+theme:
+  name: material
+  features:
+    - tabs
+    - search.suggest
+    - search.highlight
+    - navigation.footer
+  palette:
+    - media: (prefers-color-scheme)
+      toggle:
+        icon: material/brightness-auto
+        name: Switch to light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: blue grey
+      accent: teal
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: black
+      accent: teal
+      toggle:
+        icon: material/brightness-4
+        name: Switch to system preference
+  icon:
+    repo: fontawesome/brands/git-alt
+
+extra:
+  social:
+    - icon: fontawesome/brands/gitlab
+      link: https://gitlab.com/jeremy.zucker/TRIPs
+
+markdown_extensions:
+  - toc:
+      permalink: true
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.snippets:
+      check_paths: true
+  - pymdownx.smartsymbols
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+
+extra_javascript:
+  # To render LaTeX expressions
+  - javascripts/mathjax.js
+  - https://unpkg.com/mathjax@3/es5/tex-mml-chtml.js

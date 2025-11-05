@@ -1,4 +1,12 @@
 # TRIPs
+
+This repo contains code for pre-processing, cycle analysis, promoter distance analysis, and trip analysis for bacterium.
+
+[![project-badge](https://img.shields.io/badge/project%20status-ongoing-green)][repository]
+[![docs-badge](https://img.shields.io/badge/docs-pages-blue)][docs]
+[![license-badge](https://img.shields.io/badge/open--source-green)](LICENSE)
+[![python-versions-badge](https://img.shields.io/badge/python-3.10_%7C_3.11_%7C_3.12_%7C_3.13-blue?labelColor=grey&color=blue)][project-config]
+
 Version: 0.1.0
 
 ### Dependencies
@@ -37,3 +45,41 @@ We have not yet fully automated the analysis pipeline. As such, there are a numb
 - UMAP chromosome bin size (see `cycle_analysis.ipynb`): The size of chromosome bins used may need to be varied based on species and data quality. We have done 100 kb for *E. coli* and 50 kb for *S. aureus, which given the differing genome sizes is ~50 bins for each chromosome. For lower quality datasets, the bin size may need to increase.
 - Angle orientation: As explained in the `cycle_analysis.ipynb`, the initial directionality of the cell angles/gene angles is arbitrary and may need to be reversed. See notebook for details.
 - Chain selection in Rstan model fit: The cyclical regression model tends to hit a lot of local minima. However, we run eight chains (eight independent fits) with the HMC sampling, allowing us to clearly identify the chains that fit correctly. See `origin_angle_circular_model.R` for details.
+
+## Usage
+
+The notebooks in [`notebooks`][notebooks] are meant to highlight package functionality while answering specific questions within the context of the project. You can see these notebooks as an examples gallery, usually going from more basic to more advanced topics, hence the numeration. Thus, examples of how to load and display data are usually found in the first notebooks, while more advanced scientific questions are addressed in the later ones.
+
+## Documentation
+
+The documentation for this project is available at [jeremy.zucker.gitlab.io/TRIPs/][docs].
+
+## Contributing
+
+Contributions are very much welcomed, see [CONTRIBUTING][contributing] for instructions.
+
+## Authors and acknowledgment
+
+This repository was initialized from the [ceda-project-copier][ceda-project-copier] template.
+
+## Citing
+
+If you find this work useful or inspiring in your research, consider citing our work:
+
+```bibtex
+
+```
+
+## License
+
+See [LICENSE][license].
+
+[ceda-project-copier]: https://ceda-unibas.gitlab.io/ceda-project-copier/
+[docs]: https://jeremy.zucker.gitlab.io/TRIPs/
+[contributing]: CONTRIBUTING.md
+[research-group]: https://www.unibas.ch/
+[license]: LICENSE
+[repository]: https://gitlab.com/jeremy.zucker/TRIPs
+[notebooks]: https://gitlab.com/jeremy.zucker/TRIPs/-/tree/main/notebooks
+[scripts]: https://gitlab.com/jeremy.zucker/TRIPs/-/tree/main/scripts
+[project-config]: https://gitlab.com/jeremy.zucker/TRIPs/-/blob/main/pyproject.toml

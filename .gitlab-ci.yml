@@ -1,0 +1,118 @@
+stages:
+  - quality
+  - test
+  - docs
+  - deploy
+
+variables:
+  PRE_COMMIT_KEY: pre-commit-$CI_COMMIT_REF_SLUG
+  PRE_COMMIT_HOME: $CI_PROJECT_DIR/.cache/pre-commit
+  UV_CACHE_DIR: .uv-cache
+  UV_VERSION: 0.6
+  PYTHON_VERSION: 3.12 # Default Python version; others are tested in the test job
+  BASE_LAYER: bookworm
+
+default:
+  
+  cache: &global_cache
+    key:
+      files:
+        - uv.lock
+    paths:
+      - $UV_CACHE_DIR
+  image: ghcr.io/astral-sh/uv:$UV_VERSION-python$PYTHON_VERSION-$BASE_LAYER
+  before_script:
+    - uv sync --frozen # Environment syncing common to all jobs
+  after_script:
+    - uv cache prune --ci # Cache pruning common to all jobs
+  
+
+# Default trigger rules: push to default branch or merge request. Do not trigger on
+# tags.
+.default_rules: &default_rules
+  - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+  - if: $CI_COMMIT_TAG
+    when: never
+
+# Testing trigger rules: to avoid unnecessary testing on simple changes to the default
+# branch (e.g. fixing typos in documentation), we only test on the default branch if the
+# changes are made to package files or testing files
+.testing_rules: &testing_rules
+  - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_PIPELINE_SOURCE != "merge_request_event"
+    changes:
+      - pyproject.toml
+      - uv.lock
+      
+      - "src/TRIPs/**/*"
+  - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+  - if: $CI_COMMIT_TAG
+    when: never
+
+# Trigger rules for semantic version tags of the type (v)x(.x)(.x) used for deployment
+.tag_rules: &tag_rules
+  - if: $CI_COMMIT_TAG =~ /^v?(\d+\.)?(\d+\.)?(\*|\d+)$/
+
+quality:
+  cache:
+    <<: *global_cache # Inherit global cache settings
+    key: $PRE_COMMIT_KEY
+    paths:
+      - .cache/pre-commit
+  stage: quality
+  rules: *default_rules
+  script:
+    
+    - uvx --from go-task-bin task check
+    
+
+
+mypy:
+  stage: test
+  rules: *testing_rules
+  script:
+    
+    - uvx --from go-task-bin task mypy
+    
+  allow_failure: true
+
+
+
+
+test:
+  stage: test
+  rules: *testing_rules
+  
+  parallel:
+    matrix:
+      - PYTHON_VERSION: ["3.10", "3.11", "3.12", "3.13"]
+  script:
+    - uvx --from go-task-bin task test
+  
+
+  coverage: /TOTAL.*? (100(?:\.0+)?\%|[1-9]?\d(?:\.\d+)?\%)$/
+  artifacts:
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage.xml
+
+
+
+docs:
+  stage: docs
+  rules: *default_rules
+  script:
+    
+    - uvx --from go-task-bin task docs
+    
+
+deploy-pages:
+  stage: deploy
+  rules: *tag_rules
+  script:
+    
+    - uvx --from go-task-bin task docs
+    
+  pages: true
+
